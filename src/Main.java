@@ -5,30 +5,21 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
 
-        Clientes clientes = new Clientes("", "","","", 0);
+        ClienteRepositoryImpl clienteRepo = new ClienteRepositoryImpl();
+        CorretoresRepositoryImpl corretorRepo = new CorretoresRepositoryImpl();
+        ImovelRepositoryImpl imovelRepo = new ImovelRepositoryImpl();
 
-         Clientes[] client = new Clientes[1000];
-         int i = 1;
-
-         Corretores corretores = new Corretores("","","","",0);
-
-            Corretores[] broker = new Corretores[1000];
-        Imoveis.Compra compra = new Imoveis.Compra("",0,0,0);
-        Imoveis imoveis = new Imoveis("", 0, 0, 0);
-
-            Imoveis[] property = new Imoveis[1000];
+        Scanner scanner = new Scanner(System.in);
 
         System.out.println("##################################");
         System.out.println("##################################");
         System.out.println("#####                        #####");
         System.out.println("#####         CELV'TS        #####");
         System.out.println("#####                        #####");
-        System.out.println("###################################");
-        System.out.println("###################################");
+        System.out.println("##################################");
+        System.out.println("##################################");
 
-        System.out.println("Bem vindo a Corretora CELV'TS");
-
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("Bem-vindo à Corretora CELV'TS");
 
         System.out.println("Você é cliente ou corretor?");
         System.out.println("[1] Cliente");
@@ -36,233 +27,181 @@ public class Main {
         int escolha = scanner.nextInt();
 
         if (escolha == 1) {
-            System.out.println("Você ja tem uma conta?");
+            System.out.println("Você já tem uma conta?");
             System.out.println("[1] Sim");
             System.out.println("[2] Não");
             int option = scanner.nextInt();
 
             if (option == 2) {
-
-
-                while (i < client.length) {
-
-                    //pular linha usando o next.line
-                    String pularLinha = scanner.nextLine();
+                while (true) {
+                    scanner.nextLine();
 
                     System.out.println("Digite seu Nome: ");
-                    clientes.setNome(scanner.nextLine());
-
+                    String nomeCliente = scanner.nextLine();
                     System.out.println("Digite seu CPF: ");
-                    clientes.setCpf(scanner.nextLine());
-
+                    String cpfCliente = scanner.nextLine();
                     System.out.println("Digite seu Email: ");
-                    clientes.setEmail(scanner.nextLine());
-
-                    String email = "";
-
+                    String emailCliente = scanner.nextLine();
                     System.out.println("Digite uma Senha: ");
-                    clientes.setSenha(scanner.nextLine());
-                    String senha = "";
+                    String senhaCliente = scanner.nextLine();
 
                     while (true) {
-
                         System.out.println("Confirme Sua senha: ");
-                        String senhaDigitada = scanner.nextLine();
-
-
-                        if (!clientes.getSenha().equals(senhaDigitada)) {
-                            System.out.println("A senha não confere com a senha digitada");
-                            System.out.println("Tente Novamente");
+                        String senhaConfirmada = scanner.nextLine();
+                        if (!senhaCliente.equals(senhaConfirmada)) {
+                            System.out.println("A senha não confere. Tente novamente.");
                         } else {
                             break;
-
                         }
-
                     }
+
                     System.out.println("Digite sua idade: ");
-                    clientes.setIdade(scanner.nextInt());
+                    int idadeCliente = scanner.nextInt();
 
+                    Clientes cliente = new Clientes(nomeCliente, cpfCliente, emailCliente, senhaCliente, idadeCliente);
+                    clienteRepo.adicionar(cliente);
 
-                    System.out.println("Digite o Numero desejado: ");
+                    System.out.println("Digite o número desejado: ");
                     System.out.println("[1] Novo Cadastro");
                     System.out.println("[2] Login");
                     int option1 = scanner.nextInt();
 
                     if (option1 == 1) {
-                        i++;
-
+                        System.out.println("Cadastro realizado com sucesso!");
                     } else if (option1 == 2) {
+                        scanner.nextLine();
 
                         boolean continuar = true;
-
                         while (continuar) {
-                            //pular linha usando o next.line
-                            String pularLinha1 = scanner.nextLine();
                             System.out.println("Login");
                             System.out.println("Digite seu Email: ");
                             String emailCadastrado = scanner.nextLine();
                             System.out.println("Digite sua Senha: ");
                             String senhaCadastrada = scanner.nextLine();
-                            if (clientes.getEmail().equals(emailCadastrado)
-                                    && clientes.getSenha().equals(senhaCadastrada)) {
-                                System.out.println("Login aceito ");
+                            if (clienteRepo.buscarPorEmail(emailCadastrado) != null &&
+                                    clienteRepo.buscarPorEmail(emailCadastrado).getSenha().equals(senhaCadastrada)) {
+                                System.out.println("Login aceito. Bem-vindo!");
 
+                                System.out.println("Vamos comprar seu primeiro imóvel?");
+                                System.out.println("Digite o Valor do Imóvel que Você Deseja:");
+                                float valorImovel = scanner.nextFloat();
+                                System.out.println("Digite a Quantidade Máxima de Parcelas:");
+                                int parcelas = scanner.nextInt();
+                                System.out.println("Digite o Valor de Entrada:");
+                                float valorEntrada = scanner.nextFloat();
+
+                                Random random = new Random();
+                                String imovelId = String.valueOf(random.nextInt(1000000));
+                                System.out.println("O ID do Imóvel que Você Está Procurando é: " + imovelId);
+
+                                float valorParcelas = (valorImovel - valorEntrada) / parcelas;
+                                System.out.println("O valor das Prestações é: " + valorParcelas + " R$");
+
+                                System.out.println("Você deseja comprar?");
+                                System.out.println("[1] Sim");
+                                System.out.println("[2] Não");
+                                int compraImovel = scanner.nextInt();
+
+                                if (compraImovel == 1) {
+                                    System.out.println("Compra efetuada com sucesso!");
+                                } else {
+                                    System.out.println("Compra cancelada. Até a próxima!");
+                                }
+
+                                System.out.println("Deseja realizar outra operação?");
+                                System.out.println("[1] Sim");
+                                System.out.println("[2] Não");
+                                int opcao = scanner.nextInt();
+                                if (opcao == 2) {
+                                    continuar = false;
+                                    System.out.println("Encerrando o programa. Obrigado por usar nosso sistema!");
+                                }
                             } else {
-                                System.out.println("Email ou Senha Incorretos tente novamente: ");
-                                System.out.println("Pressione Enter para Tentar Novamente: ");
-
+                                System.out.println("Email ou Senha incorretos. Tente novamente.");
                             }
-
-                            System.out.println("Vamos comprar seu primeiro imovel?");
-
-                            System.out.println("Digite o Valor do Imovel que Você Deseja");
-                            imoveis.setValor(scanner.nextFloat());
-
-                            System.out.println("Digite a Quantidade Maxima de Parcelas Desejada");
-                            imoveis.setParcelas(scanner.nextInt());
-
-                            System.out.println("Digite o Valor de Entrada Que Você preterde pagar");
-                            imoveis.setValorEntrada(scanner.nextFloat());
-
-                            Random random = new Random(100000000);
-                            int numeroRandom = random.nextInt();
-                            System.out.println("O id do Imovel que Você Esta Procurando é: "+ numeroRandom);
-
-                            float ValorParcelas = (imoveis.valor - imoveis.valorEntrada)  / imoveis.parcelas;
-
-                            System.out.println("O valor das Prestações ficam de: " + ValorParcelas +"R$");
-
-                            System.out.println("Você Deseja Compra?");
-                            System.out.println("[1] Sim");
-                            System.out.println("[2] Não");
-                            int compraImovel = scanner.nextInt();
-
-                            if (compraImovel == 1){
-                                compra.compraEfetuada();
-                            }else {
-                                System.out.println("Tudo Bem, Até uma Proxima Compra.");
-                            }
-
-                            System.out.println("Deseja realizar outra operação?");
-                            System.out.println("[1] Sim");
-                            System.out.println("[2] Não");
-                            int opcao = scanner.nextInt();
-                            scanner.nextLine();
-                            if (opcao == 2) {
-                                continuar = false;
-                                System.out.println("Encerrando o programa. Obrigado por usar nosso sistema!");
-
-                            }
-
                         }
-
                     }
-
                 }
             }
         } else if (escolha == 2) {
-                        System.out.println("Você ja tem uma conta?");
-                        System.out.println("[1] Sim");
-                        System.out.println("[2] Não");
-                        int optionCo = scanner.nextInt();
+            System.out.println("Você já tem uma conta?");
+            System.out.println("[1] Sim");
+            System.out.println("[2] Não");
+            int optionCo = scanner.nextInt();
 
-                        if (optionCo == 2) {
+            if (optionCo == 2) {
+                while (true) {
+                    scanner.nextLine();
 
+                    System.out.println("Digite seu Nome: ");
+                    String nomeCorretor = scanner.nextLine();
+                    System.out.println("Digite seu CPF: ");
+                    String cpfCorretor = scanner.nextLine();
+                    System.out.println("Digite seu Email: ");
+                    String emailCorretor = scanner.nextLine();
+                    System.out.println("Digite uma Senha: ");
+                    String senhaCorretor = scanner.nextLine();
 
-                            while (i < client.length) {
+                    while (true) {
+                        System.out.println("Confirme Sua senha: ");
+                        String senhaDigitadaCo = scanner.nextLine();
+                        if (!senhaCorretor.equals(senhaDigitadaCo)) {
+                            System.out.println("A senha não confere. Tente novamente.");
+                        } else {
+                            break;
+                        }
+                    }
 
-                                //pular linha usando o next.line
-                                String pularLinha = scanner.nextLine();
+                    System.out.println("Digite sua idade: ");
+                    int idadeCorretor = scanner.nextInt();
 
-                                System.out.println("Digite seu Nome: ");
-                                corretores.setNomeCorretor(scanner.nextLine());
+                    Corretores corretor = new Corretores(nomeCorretor, cpfCorretor, emailCorretor, senhaCorretor, idadeCorretor);
+                    corretorRepo.adicionar(corretor);
 
-                                System.out.println("Digite seu CPF: ");
-                                corretores.setCpfCorretor(scanner.nextLine());
+                    System.out.println("Digite o número desejado: ");
+                    System.out.println("[1] Novo Cadastro");
+                    System.out.println("[2] Login");
+                    int option1Co = scanner.nextInt();
 
-                                System.out.println("Digite seu Email: ");
-                                corretores.setEmailCorretor(scanner.nextLine());
-
-                                String emailCo = "";
-
-                                System.out.println("Digite uma Senha: ");
-                                corretores.setSenhaCorretor(scanner.nextLine());
-                                String senhaCo = "";
-
-                                while (true) {
-
-                                    System.out.println("Confirme Sua senha: ");
-                                    String senhaDigitadaCo = scanner.nextLine();
-
-                                    if (!corretores.getSenhaCorretor().equals(senhaDigitadaCo)) {
-                                        System.out.println("A senha não confere com a senha digitada");
-                                        System.out.println("Tente Novamente");
-                                    } else {
-                                        break;
-
-                                    }
-
-                                }
-                                System.out.println("Digite sua idade: ");
-                                corretores.setIdadeCorretor(scanner.nextInt());
-
-                                System.out.println("Digite o Numero desejado: ");
-                                System.out.println("[1] Novo Cadastro");
-                                System.out.println("[2] Login");
-                                int option1Co = scanner.nextInt();
-
-                                if (option1Co == 1) {
-                                    i++;
-
-                                } else if (option1Co == 2) {
+                    if (option1Co == 1) {
+                        System.out.println("Cadastro realizado com sucesso!");
+                    } else if (option1Co == 2) {
+                        scanner.nextLine();
 
                         boolean continuarC = true;
-
                         while (continuarC) {
-                            //pular linha usando o next.line
-                            String pularLinha1 = scanner.nextLine();
                             System.out.println("Login");
                             System.out.println("Digite seu Email: ");
                             String emailCadastradoCo = scanner.nextLine();
                             System.out.println("Digite sua Senha: ");
                             String senhaCadastradaCo = scanner.nextLine();
-                            if (corretores.getEmailCorretor().equals(emailCadastradoCo)
-                                    && corretores.getSenhaCorretor().equals(senhaCadastradaCo)) {
-                                System.out.println("Login aceito, Bem-Vindo Corretor");
+                            if (corretorRepo.buscarPorEmail(emailCadastradoCo) != null &&
+                                    corretorRepo.buscarPorEmail(emailCadastradoCo).getSenhaCorretor().equals(senhaCadastradaCo)) {
+                                System.out.println("Login aceito. Bem-vindo, Corretor!");
 
+                                System.out.println("Cadastre um imóvel");
+                                System.out.println("Digite o ID do Imóvel:");
+                                String imovelId = scanner.nextLine();
+                                System.out.println("Digite o Valor do Imóvel:");
+                                float valorImovel = scanner.nextFloat();
+                                System.out.println("Digite a Quantidade Máxima de Parcelas:");
+                                int parcelas = scanner.nextInt();
+                                System.out.println("Digite o Valor de Entrada:");
+                                float valorEntrada = scanner.nextFloat();
 
+                                Imoveis imovel = new Imoveis(imovelId, valorImovel, parcelas, valorEntrada);
+                                imovelRepo.adicionar(imovel);
+
+                                System.out.println("Deseja cadastrar outro imóvel?");
+                                System.out.println("[1] Sim");
+                                System.out.println("[2] Não");
+                                int opcaoC = scanner.nextInt();
+                                if (opcaoC == 2) {
+                                    continuarC = false;
+                                    System.out.println("Encerrando o programa. Obrigado por usar nosso sistema!");
+                                }
                             } else {
-                                System.out.println("Email ou Senha Incorretos tente novamente: ");
-                                System.out.println("Pressione Enter para Tentar Novamente: ");
-
-                            }
-
-                            System.out.println("Cadastre o Imovel");
-
-                            System.out.println("Digite o Id do Imovel");
-                            imoveis.setImovel(scanner.nextLine());
-
-                            System.out.println("Digite o Valor do Imovel");
-                            imoveis.setValor(scanner.nextFloat());
-
-                            System.out.println("Digite a Quantidade Maxima de Parcelas");
-                            imoveis.setParcelas(scanner.nextInt());
-
-                            System.out.println("Digite o Valor de Entrada");
-                            imoveis.setValorEntrada(scanner.nextFloat());
-
-                            float ValorParcelas = (imoveis.valor - imoveis.valorEntrada)  / imoveis.parcelas;
-
-                            System.out.println("O valor das Prestações ficam de: " + ValorParcelas +"R$");
-
-                            System.out.println("Deseja Cadastrar Outro Imovel?");
-                            System.out.println("[1] Sim");
-                            System.out.println("[2] Não");
-                            int opcaoC = scanner.nextInt();
-                            scanner.nextLine();
-                            if (opcaoC == 2) {
-                                continuarC = false;
-                                System.out.println("Encerrando o programa. Obrigado por usar nosso sistema!");
+                                System.out.println("Email ou Senha incorretos. Tente novamente.");
                             }
                         }
                     }
