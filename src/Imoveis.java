@@ -3,15 +3,15 @@ public class Imoveis {
     String imovel;
     float valor;
     int parcelas;
-    float prestacao;
+    float valorEntrada;
 
 
-    Imoveis(String imovel, float valor, int parcelas, float prestacao){
+    Imoveis(String imovel, float valor, int parcelas, float valorEntrada){
 
         this.imovel = imovel;
         this.valor = valor;
         this.parcelas = parcelas;
-        this.prestacao = prestacao;
+        this.valorEntrada = valorEntrada;
 
     }
 
@@ -27,8 +27,8 @@ public class Imoveis {
         this.parcelas = parcelas;
     }
 
-    public void setPrestacao(float prestacao) {
-        this.prestacao = prestacao;
+    public void setValorEntrada(float valorEntrada) {
+        this.valorEntrada = valorEntrada;
     }
 
     public String getImovel() {
@@ -43,15 +43,28 @@ public class Imoveis {
         return parcelas;
     }
 
-    public float getPrestacao() {
-        return prestacao;
+    public float getValorEntrada() {
+        return valorEntrada;
     }
 
     public String retonarImoveis(){
 
-        return "\n" + this.imovel + "\n" + this.valor + "\n" + this.parcelas + "\n" + this.prestacao;
+        return "\n" + this.imovel + "\n" + this.valor + "\n"
+                + this.parcelas + "\n" + this.valorEntrada;
 
     }
+    public void compraEfetuada(){
+        System.out.println("Compra efetuada");
+    }
 
+     static class Compra extends Imoveis{
+        public Compra(String imovel, float valor, int parcelas, float valorEntrada){
+            super(imovel, valor, parcelas, valorEntrada);
+        }
 
+        @Override
+        public void compraEfetuada(){
+            System.out.println("O Cliente Efetuou uma Compra");
+        }
+    }
 }
